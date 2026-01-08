@@ -414,10 +414,9 @@ Federico Díaz Recart
 </ul></li>
 <li><p>Modelo estructural</p>
 <ul>
-<li>Regresión lineal</li>
 <li>Path analysis (Variables observadas)</li>
+<li>Modelo de ecuaciones estructurales: Combinación entre modelo de medición y modelo estructural</li>
 </ul></li>
-<li><p>Modelo de ecuaciones estructurales: Combinación entre modelo de medición y modelo estructural</p></li>
 </ul>
 </div></section>
 <section id="introducción-qué-es-sem" class="slide level2">
@@ -522,13 +521,13 @@ Federico Díaz Recart
 <section id="pasos" class="slide level2">
 <h2>Pasos</h2>
 <ol type="1">
-<li>Identificación del modelo</li>
+<li>Especificación del modelo</li>
 <li>Evaluación de ajuste</li>
 <li>Cargas factoriales</li>
 </ol>
 </section>
-<section id="vamos-allá" class="slide level2">
-<h2>Vamos allá!</h2>
+<section id="especificación-del-modelo" class="slide level2">
+<h2>Especificación del modelo</h2>
 <div style="font-size: 0.85em;">
 
 
@@ -555,8 +554,8 @@ Federico Díaz Recart
 <li>Para ajustar el modelo utilizamos el comando cfa</li>
 </ul>
 </div></section>
-<section id="ajuste-del-modelo-y-cargas-factoriales" class="slide level2">
-<h2>Ajuste del modelo Y cargas factoriales</h2>
+<section id="ajuste-del-modelo" class="slide level2">
+<h2>Ajuste del modelo</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">fitMeasures</span>(fit_cfa, <span class="fu">c</span>(<span class="st">"chisq"</span>, <span class="st">"df"</span>, <span class="st">"pvalue"</span>, <span class="st">"cfi"</span>, <span class="st">"rmsea"</span>, <span class="st">"tli"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -564,6 +563,22 @@ Federico Díaz Recart
 41.392  8.000  0.000  0.978  0.084  0.958 </code></pre>
 </div>
 </div>
+<ul>
+<li>χ² (p &lt; .05): indica discrepancia significativa, pero es sensible al tamaño muestral.</li>
+<li>CFI (.978): muy buen ajuste del modelo.</li>
+<li>TLI (.958): buen ajuste, penaliza complejidad.</li>
+<li>RMSEA (.084): ajuste aceptable–limítrofe.</li>
+</ul>
+<p>Conclusión: ajuste global bueno, pese al χ² significativo.</p>
+</section>
+<section id="cargas-factoriales" class="slide level2">
+<h2>Cargas factoriales</h2>
+<div style="font-size: 0.85em;">
+
+<ul>
+<li>Las cargas factoriales indican qué tan fuertemente cada ítem observado está asociado con el factor latente que pretende medir.</li>
+<li>Es el coeficiente de regresión que indica cuánto cambia el ítem cuando el factor aumenta una unidad.</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>loadings <span class="ot">&lt;-</span> <span class="fu">inspect</span>(fit_cfa, <span class="at">what =</span> <span class="st">"std"</span>)<span class="sc">$</span>lambda</span>
 <span id="cb4-2"><a href="#cb4-2"></a>loadings</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -577,7 +592,10 @@ Q15_2   0.000   0.721
 Q15_3   0.000   0.781</code></pre>
 </div>
 </div>
-</section>
+<ul>
+<li>Todas son altas (≈ .71–.92), indicando que los ítems representan bien sus factores latentes.</li>
+</ul>
+</div></section>
 <section id="modelo-estructural" class="slide level2 center">
 <h2>2: Modelo estructural</h2>
 </section>
@@ -589,7 +607,289 @@ Q15_3   0.000   0.781</code></pre>
 <li>No evalúa un modelo de medición</li>
 </ul>
 
-<img data-src="PathModel.png" class="r-stretch quarto-figure-center"><p class="caption">Caughlin, D. E. (2022). R for HR: An introduction to human resource analytics using R.</p><div class="footer footer-default">
+<img data-src="PathModel.png" class="r-stretch quarto-figure-center"><p class="caption">Caughlin, D. E. (2022). R for HR: An introduction to human resource analytics using R.</p></section>
+<section id="path-analysis-análisis-de-senderos-1" class="slide level2">
+<h2>Path analysis (Análisis de senderos)</h2>
+<ul>
+<li>Es una extensión de la regresión lineal</li>
+<li>Incorpora varias regresiones en un mismo modelo, permitiendo evaluar
+<ul>
+<li>Efectos directos</li>
+<li>Efectos indirectos</li>
+<li>Mediación y efectos totales</li>
+</ul></li>
+</ul>
+</section>
+<section id="path-analysis-análisis-de-senderos-2" class="slide level2">
+<h2>Path analysis (Análisis de senderos)</h2>
+<h3 id="supuestos">Supuestos</h3>
+<ul>
+<li>Tamaño de muestra grande: Al menos 10 a 20 casos por parametro, idealmente N&gt;200</li>
+<li>Relaciones lineales entre variables</li>
+<li>Identificación del modelo basado en teoría</li>
+<li>Variables continuas</li>
+</ul>
+</section>
+<section id="modelo-de-ecuaciones-estructurales" class="slide level2">
+<h2>Modelo de ecuaciones estructurales</h2>
+<ul>
+<li>Combinan modelo de medición y modelo estructural</li>
+<li>Hoy nos vamos a fijar en modelos que combinan análisis de senderos con análisis factorial confirmatorio</li>
+<li>En síntesis: Análisis de senderos de variables latentes y observadas</li>
+<li>Estos modelos son también llamados modelos MIMIC (Multiple Indicators Multiple Causes)</li>
+</ul>
+</section>
+<section id="modelo-de-ecuaciones-estructurales-1" class="slide level2">
+<h2>Modelo de ecuaciones estructurales</h2>
+<h3 id="efecto-directo-indirecto-y-total">Efecto directo, indirecto y total</h3>
+<ul>
+<li><p>Efecto directo: influencia de una variable sobre otra sin mediadores (por ejemplo, 𝑋→𝑌</p></li>
+<li><p>Efecto indirecto: influencia de una variable sobre otra que ocurre a través de una o más variables mediadoras (por ejemplo, 𝑋→𝑀→𝑌)</p>
+<ul>
+<li>Matemáticamente, es el producto de los coeficientes de los caminos involucrados (ej.: 𝑎×𝑏)</li>
+</ul></li>
+<li><p>Efecto total: efecto global de una variable sobre otra, que combina todas las vías posibles.</p></li>
+</ul>
+</section>
+<section id="modelo-de-ecuaciones-estructurales-2" class="slide level2">
+<h2>Modelo de ecuaciones estructurales</h2>
+<h3 id="supuestos-1">Supuestos</h3>
+<ul>
+<li>Tamaño de muestra grande: Al menos 10 a 20 casos por parametro, idealmente N&gt;200</li>
+<li>Relaciones lineales entre variables</li>
+<li>Identificación del modelo basado en teoría</li>
+<li>Variables continuas</li>
+</ul>
+</section>
+<section id="modelo-de-ecuaciones-estructurales-3" class="slide level2">
+<h2>Modelo de ecuaciones estructurales</h2>
+<h3 id="especificación-del-modelo-1">Especificación del modelo</h3>
+<p>Cupani (2012) sugiere varias estrategias posibles:</p>
+<ol type="1">
+<li><p>Modelización confirmatoria: Se especifica un solo modelo alineado con lo que se espera teóricamente.</p></li>
+<li><p>Modelos rivales: Se especifican varios modelos distintos para que “compitan” en términos de ajuste</p></li>
+<li><p>Desarrollo del modelo: Se parte de un modelo simple y se va mejorando, ya sea el modelo de medición o las relaciones estructurales entre variables</p></li>
+</ol>
+</section>
+<section id="modelo-de-ecuaciones-estructurales-4" class="slide level2">
+<h2>Modelo de ecuaciones estructurales</h2>
+<h3 id="evaluación-del-ajuste">Evaluación del ajuste</h3>
+<p>Igual que en los modelos CFA</p>
+<ul>
+<li>Chi cuadrado</li>
+<li>RMSEA</li>
+<li>CFI</li>
+</ul>
+</section>
+<section id="modelo-de-ecuaciones-estructurales-5" class="slide level2">
+<h2>Modelo de ecuaciones estructurales</h2>
+<h3 id="interpretación-de-resultados">Interpretación de resultados</h3>
+<ul>
+<li>Coeficientes beta no estandarizados: Efecto que cada aumento en una unidad de la variable independiente tiene en la dependiente</li>
+<li>Coeficientes beta estandarizados: Efectos que cada aumento en una desviación estándar de la variable independiente tiene en la dependiente (en términos de desviaciones estándar)</li>
+<li>Significación de cada coeficiente: p&lt;0,05, rechazamos hipótesis nula de que el beta es igual a 0 a un 95% de confianza</li>
+</ul>
+</section>
+<section id="ejemplo-aplicado" class="slide level2">
+<h2>Ejemplo aplicado</h2>
+
+<img data-src="Ejemplo%20SEM.png" class="r-stretch quarto-figure-center"><p class="caption">González, R., Díaz, F., Fuenzalida, D., Álvarez, A., Lay, S., Carvacho, H., &amp; Manzi, J. (2025, May 22–23). Social norms and affective polarization in political contexts [Conference presentation]. Interdisciplinary Conference on Social Norms, Cohesion, and (De)Polarization, Utrecht, Netherlands.</p></section>
+<section id="ejemplo-aplicado-1" class="slide level2">
+<h2>Ejemplo aplicado</h2>
+<h3 id="variables-1">Variables</h3>
+<div style="font-size: 0.9em;">
+
+<ul>
+<li>Normas prescriptivas pro contacto (ej: “Las personas de [INGROUP] que conozco valoran tener amistades con gente de [OUTGROUP])</li>
+<li>Normas descriptivas pro contacto (ej: “Es común que las personas de [INGROUP] tengan amistades de [OUTGROUP])</li>
+<li>Contacto intergrupal (ej: ¿Con qué frecuencia interactúa con personas de [OUTGROUP])</li>
+<li>Polarización ideológica: Medida como la distancia del punto medio en una serie de problemáticas (Aborto, conflicto indígena, rol estado vs empresa)</li>
+</ul>
+</div></section>
+<section id="especificación-del-modelo-2" class="slide level2">
+<h2>Especificación del modelo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>m1 <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="st">## -----------------------------------------------</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="st"># Variables latentes</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="st"># -----------------------------------------------</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="st">norm_descr_c =~ Q10_1 + Q10_2 + Q10_3</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="st">norm_prescr_c =~ Q15_1 + Q15_2 + Q15_3</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="st">contact =~ Cantidad_contacto + Contacto_positivo</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="st"># -----------------------------------------------</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a><span class="st"># Relaciones estructurales (Mediación)</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="st"># -----------------------------------------------</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a><span class="st"># Efecto de normas descriptivas y prescriptivas sobre contact (a)</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a><span class="st">contact ~ a*norm_descr_c + a2*norm_prescr_c</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a></span>
+<span id="cb6-16"><a href="#cb6-16"></a><span class="st"># Efecto de contact sobre polarización (b)</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="st">id_pol ~ b*contact + c*norm_descr_c + c2*norm_prescr_c</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a></span>
+<span id="cb6-19"><a href="#cb6-19"></a><span class="st"># Covarianza</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="st">norm_descr_c ~~ norm_prescr_c</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a></span>
+<span id="cb6-22"><a href="#cb6-22"></a><span class="st"># Covarianza items</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a><span class="st">Q10_1 ~~ Q15_1</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="st">Q10_2 ~~ Q15_2</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a><span class="st">Q10_3 ~~ Q15_3</span></span>
+<span id="cb6-26"><a href="#cb6-26"></a></span>
+<span id="cb6-27"><a href="#cb6-27"></a><span class="st"># -----------------------------------------------</span></span>
+<span id="cb6-28"><a href="#cb6-28"></a><span class="st"># Efectos definidos (Indirecto y Total)</span></span>
+<span id="cb6-29"><a href="#cb6-29"></a><span class="st"># -----------------------------------------------</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a><span class="st">indirect1 := a*b</span></span>
+<span id="cb6-31"><a href="#cb6-31"></a><span class="st">indirect3 := a2*b</span></span>
+<span id="cb6-32"><a href="#cb6-32"></a></span>
+<span id="cb6-33"><a href="#cb6-33"></a><span class="st">total1 := a * b + c</span></span>
+<span id="cb6-34"><a href="#cb6-34"></a><span class="st">total3 := a2 * b + c2</span></span>
+<span id="cb6-35"><a href="#cb6-35"></a><span class="st">'</span></span>
+<span id="cb6-36"><a href="#cb6-36"></a></span>
+<span id="cb6-37"><a href="#cb6-37"></a>fit_m1 <span class="ot">&lt;-</span> <span class="fu">sem</span>(m1, <span class="at">data =</span> df, <span class="at">missing=</span><span class="st">"FIML"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="interpretación-de-resultados-1" class="slide level2">
+<h2>Interpretación de resultados</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">summary</span>(fit_m1, <span class="at">fit.measures =</span> <span class="cn">TRUE</span>, <span class="at">standardized =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>lavaan 0.6-19 ended normally after 61 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of model parameters                        35
+
+  Number of observations                           591
+  Number of missing patterns                         5
+
+Model Test User Model:
+                                                      
+  Test statistic                                47.394
+  Degrees of freedom                                19
+  P-value (Chi-square)                           0.000
+
+Model Test Baseline Model:
+
+  Test statistic                              1745.124
+  Degrees of freedom                                36
+  P-value                                        0.000
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.983
+  Tucker-Lewis Index (TLI)                       0.969
+                                                      
+  Robust Comparative Fit Index (CFI)             0.983
+  Robust Tucker-Lewis Index (TLI)                0.968
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)              -6191.029
+  Loglikelihood unrestricted model (H1)      -6167.332
+                                                      
+  Akaike (AIC)                               12452.058
+  Bayesian (BIC)                             12605.422
+  Sample-size adjusted Bayesian (SABIC)      12494.308
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.050
+  90 Percent confidence interval - lower         0.033
+  90 Percent confidence interval - upper         0.068
+  P-value H_0: RMSEA &lt;= 0.050                    0.460
+  P-value H_0: RMSEA &gt;= 0.080                    0.003
+                                                      
+  Robust RMSEA                                   0.051
+  90 Percent confidence interval - lower         0.033
+  90 Percent confidence interval - upper         0.069
+  P-value H_0: Robust RMSEA &lt;= 0.050             0.448
+  P-value H_0: Robust RMSEA &gt;= 0.080             0.003
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.031
+
+Parameter Estimates:
+
+  Standard errors                             Standard
+  Information                                 Observed
+  Observed information based on                Hessian
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  norm_descr_c =~                                                       
+    Q10_1             1.000                               0.713    0.779
+    Q10_2             1.203    0.060   20.208    0.000    0.858    0.922
+    Q10_3             0.945    0.054   17.529    0.000    0.673    0.707
+  norm_prescr_c =~                                                      
+    Q15_1             1.000                               0.639    0.777
+    Q15_2             0.941    0.062   15.132    0.000    0.601    0.726
+    Q15_3             1.091    0.069   15.871    0.000    0.698    0.771
+  contact =~                                                            
+    Cantidad_cntct    1.000                               0.545    0.844
+    Contacto_postv    0.729    0.137    5.336    0.000    0.397    0.442
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  contact ~                                                             
+    nrm_dscr_  (a)    0.273    0.047    5.807    0.000    0.356    0.356
+    nrm_prsc_ (a2)    0.180    0.053    3.404    0.001    0.211    0.211
+  id_pol ~                                                              
+    contact    (b)   -0.641    0.236   -2.714    0.007   -0.350   -0.229
+    nrm_dscr_  (c)   -0.013    0.132   -0.097    0.923   -0.009   -0.006
+    nrm_prsc_ (c2)    0.223    0.143    1.557    0.119    0.143    0.093
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+  norm_descr_c ~~                                                       
+    norm_prescr_c     0.244    0.029    8.508    0.000    0.536    0.536
+ .Q10_1 ~~                                                              
+   .Q15_1             0.025    0.017    1.504    0.133    0.025    0.084
+ .Q10_2 ~~                                                              
+   .Q15_2            -0.027    0.016   -1.715    0.086   -0.027   -0.132
+ .Q10_3 ~~                                                              
+   .Q15_3             0.077    0.020    3.802    0.000    0.077    0.199
+
+Intercepts:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .Q10_1             3.371    0.038   89.599    0.000    3.371    3.686
+   .Q10_2             3.156    0.038   82.478    0.000    3.156    3.394
+   .Q10_3             3.100    0.039   79.168    0.000    3.100    3.257
+   .Q15_1             2.973    0.034   87.857    0.000    2.973    3.614
+   .Q15_2             2.404    0.034   70.555    0.000    2.404    2.902
+   .Q15_3             2.593    0.037   69.591    0.000    2.593    2.864
+   .Cantidad_cntct    2.664    0.027  100.185    0.000    2.664    4.121
+   .Contacto_postv    3.008    0.037   80.333    0.000    3.008    3.346
+   .id_pol            2.782    0.063   44.224    0.000    2.782    1.822
+
+Variances:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+   .Q10_1             0.328    0.026   12.578    0.000    0.328    0.393
+   .Q10_2             0.129    0.026    4.939    0.000    0.129    0.149
+   .Q10_3             0.453    0.031   14.717    0.000    0.453    0.500
+   .Q15_1             0.268    0.025   10.547    0.000    0.268    0.396
+   .Q15_2             0.325    0.026   12.351    0.000    0.325    0.473
+   .Q15_3             0.333    0.030   10.989    0.000    0.333    0.406
+   .Cantidad_cntct    0.120    0.051    2.369    0.018    0.120    0.288
+   .Contacto_postv    0.650    0.047   13.906    0.000    0.650    0.805
+   .id_pol            2.227    0.136   16.385    0.000    2.227    0.955
+    norm_descr_c      0.508    0.049   10.462    0.000    1.000    1.000
+    norm_prescr_c     0.409    0.041    9.891    0.000    1.000    1.000
+   .contact           0.222    0.051    4.373    0.000    0.748    0.748
+
+Defined Parameters:
+                   Estimate  Std.Err  z-value  P(&gt;|z|)   Std.lv  Std.all
+    indirect1        -0.175    0.067   -2.627    0.009   -0.125   -0.082
+    indirect3        -0.115    0.055   -2.087    0.037   -0.074   -0.048
+    total1           -0.188    0.118   -1.594    0.111   -0.134   -0.088
+    total3            0.108    0.137    0.784    0.433    0.069    0.045</code></pre>
+</div>
+</div>
+</section>
+<section id="gracias" class="title-slide slide level1 center">
+<h1>¡Gracias!</h1>
+<p>fdr@alumni.uc.cl</p>
+<div class="footer footer-default">
 
 </div>
 </section>

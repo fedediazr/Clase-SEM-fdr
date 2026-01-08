@@ -20,10 +20,8 @@ editor: visual
 
 -   Modelo estructural
 
-    -   Regresión lineal
     -   Path analysis (Variables observadas)
-
--   Modelo de ecuaciones estructurales: Combinación entre modelo de medición y modelo estructural
+    -   Modelo de ecuaciones estructurales: Combinación entre modelo de medición y modelo estructural
 
 ## Introducción: ¿Qué es SEM?
 
@@ -125,11 +123,11 @@ Indique el grado de acuerdo o desacuerdo con las siguientes afirmaciones
 
 ## Pasos
 
-1)  Identificación del modelo
+1)  Especificación del modelo
 2)  Evaluación de ajuste
 3)  Cargas factoriales
 
-## Vamos allá!
+## Especificación del modelo
 
 <div style="font-size: 0.85em;">
 
@@ -155,16 +153,32 @@ fit_cfa <- cfa(cfa, data = df)
 -   Tenemos 2 variables latentes, manifestadas por 3 items cada una
 -   Para ajustar el modelo utilizamos el comando cfa
 
-## Ajuste del modelo Y cargas factoriales
+## Ajuste del modelo
 
 ```{r, echo=TRUE}
 fitMeasures(fit_cfa, c("chisq", "df", "pvalue", "cfi", "rmsea", "tli"))
 ```
 
+-   χ² (p \< .05): indica discrepancia significativa, pero es sensible al tamaño muestral.
+-   CFI (.978): muy buen ajuste del modelo.
+-   TLI (.958): buen ajuste, penaliza complejidad.
+-   RMSEA (.084): ajuste aceptable--limítrofe.
+
+Conclusión: ajuste global bueno, pese al χ² significativo.
+
+## Cargas factoriales
+
+<div style="font-size: 0.85em;">
+
+-   Las cargas factoriales indican qué tan fuertemente cada ítem observado está asociado con el factor latente que pretende medir.
+-   Es el coeficiente de regresión que indica cuánto cambia el ítem cuando el factor aumenta una unidad.
+
 ```{r, echo=TRUE}
 loadings <- inspect(fit_cfa, what = "std")$lambda
 loadings
 ```
+
+-   Todas son altas (≈ .71--.92), indicando que los ítems representan bien sus factores latentes.
 
 ## 2: Modelo estructural {.center}
 
@@ -176,4 +190,140 @@ loadings
 
 [![Caughlin, D. E. (2022). R for HR: An introduction to human resource analytics using R.](PathModel.png)](https://rforhr.com/sem.html)
 
+## Path analysis (Análisis de senderos)
 
+-   Es una extensión de la regresión lineal
+-   Incorpora varias regresiones en un mismo modelo, permitiendo evaluar
+    -   Efectos directos
+    -   Efectos indirectos
+    -   Mediación y efectos totales
+
+## Path analysis (Análisis de senderos)
+
+### Supuestos
+
+-   Tamaño de muestra grande: Al menos 10 a 20 casos por parametro, idealmente N\>200
+-   Relaciones lineales entre variables
+-   Identificación del modelo basado en teoría
+-   Variables continuas
+
+## Modelo de ecuaciones estructurales
+
+-   Combinan modelo de medición y modelo estructural
+-   Hoy nos vamos a fijar en modelos que combinan análisis de senderos con análisis factorial confirmatorio
+-   En síntesis: Análisis de senderos de variables latentes y observadas
+-   Estos modelos son también llamados modelos MIMIC (Multiple Indicators Multiple Causes)
+
+## Modelo de ecuaciones estructurales
+### Efecto directo, indirecto y total
+
+-  Efecto directo: influencia de una variable sobre otra sin mediadores (por ejemplo, 𝑋→𝑌
+
+-  Efecto indirecto: influencia de una variable sobre otra que ocurre a través de una o más variables mediadoras (por ejemplo, 𝑋→𝑀→𝑌)
+    -  Matemáticamente, es el producto de los coeficientes de los caminos
+    involucrados (ej.: 𝑎×𝑏)
+-  Efecto total: efecto global de una variable sobre otra, que combina todas las vías posibles.
+
+## Modelo de ecuaciones estructurales
+### Supuestos
+
+-   Tamaño de muestra grande: Al menos 10 a 20 casos por parametro, idealmente N\>200
+-   Relaciones lineales entre variables
+-   Identificación del modelo basado en teoría
+-   Variables continuas
+
+## Modelo de ecuaciones estructurales
+
+### Especificación del modelo
+
+Cupani (2012) sugiere varias estrategias posibles:
+
+1)  Modelización confirmatoria: Se especifica un solo modelo alineado con lo que se espera teóricamente.
+
+2)  Modelos rivales: Se especifican varios modelos distintos para que "compitan" en términos de ajuste
+
+3)  Desarrollo del modelo: Se parte de un modelo simple y se va mejorando, ya sea el modelo de medición o las relaciones estructurales entre variables
+
+## Modelo de ecuaciones estructurales
+
+### Evaluación del ajuste
+
+Igual que en los modelos CFA
+
+-   Chi cuadrado
+-   RMSEA
+-   CFI
+
+## Modelo de ecuaciones estructurales
+
+### Interpretación de resultados
+
+-   Coeficientes beta no estandarizados: Efecto que cada aumento en una unidad de la variable independiente tiene en la dependiente
+-   Coeficientes beta estandarizados: Efectos que cada aumento en una desviación estándar de la variable independiente tiene en la dependiente (en términos de desviaciones estándar)
+-   Significación de cada coeficiente: p\<0,05, rechazamos hipótesis nula de que el beta es igual a 0 a un 95% de confianza
+
+## Ejemplo aplicado
+
+![González, R., Díaz, F., Fuenzalida, D., Álvarez, A., Lay, S., Carvacho, H., & Manzi, J. (2025, May 22--23). Social norms and affective polarization in political contexts \[Conference presentation\]. Interdisciplinary Conference on Social Norms, Cohesion, and (De)Polarization, Utrecht, Netherlands.](Ejemplo%20SEM.png)
+
+## Ejemplo aplicado
+### Variables
+<div style="font-size: 0.9em;">
+
+-  Normas prescriptivas pro contacto (ej: "Las personas de [INGROUP] que conozco valoran tener amistades con gente de [OUTGROUP])
+-  Normas descriptivas pro contacto (ej: "Es común que las personas de [INGROUP] tengan  amistades de [OUTGROUP])
+-  Contacto intergrupal (ej: ¿Con qué frecuencia interactúa con personas de [OUTGROUP])
+-  Polarización ideológica: Medida como la distancia del punto medio en una serie de problemáticas (Aborto, conflicto indígena, rol estado vs empresa)
+
+
+## Especificación del modelo
+
+```{r, echo=TRUE}
+m1 <- '
+
+## -----------------------------------------------
+# Variables latentes
+# -----------------------------------------------
+norm_descr_c =~ Q10_1 + Q10_2 + Q10_3
+norm_prescr_c =~ Q15_1 + Q15_2 + Q15_3
+contact =~ Cantidad_contacto + Contacto_positivo
+
+# -----------------------------------------------
+# Relaciones estructurales (Mediación)
+# -----------------------------------------------
+# Efecto de normas descriptivas y prescriptivas sobre contact (a)
+contact ~ a*norm_descr_c + a2*norm_prescr_c
+
+# Efecto de contact sobre polarización (b)
+id_pol ~ b*contact + c*norm_descr_c + c2*norm_prescr_c
+
+# Covarianza
+norm_descr_c ~~ norm_prescr_c
+
+# Covarianza items
+Q10_1 ~~ Q15_1
+Q10_2 ~~ Q15_2
+Q10_3 ~~ Q15_3
+
+# -----------------------------------------------
+# Efectos definidos (Indirecto y Total)
+# -----------------------------------------------
+indirect1 := a*b
+indirect3 := a2*b
+
+total1 := a * b + c
+total3 := a2 * b + c2
+'
+
+fit_m1 <- sem(m1, data = df, missing="FIML")
+```
+
+## Interpretación de resultados
+
+```{r, echo=TRUE}
+summary(fit_m1, fit.measures = TRUE, standardized = TRUE)
+```
+
+# ¡Gracias! {.center}
+
+fdr@alumni.uc.cl
