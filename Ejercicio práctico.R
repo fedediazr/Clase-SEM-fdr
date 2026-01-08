@@ -1,3 +1,4 @@
+
 ##################################
 # Ejercicio práctico
 ##################################
@@ -13,7 +14,6 @@ library(lavaan)
 
 # Descriptivos
 
-df$pol
 df_subset<-dplyr::select(df, Q60, Q61, Q62, Q68_1, Q68_2, Q68_3, id_pol)
 
 library(Hmisc)
@@ -91,5 +91,3 @@ m2 <- '
 
 fit_m2 <- sem(m2, data = df_subset, missing="FIML")
 summary(fit_m2, fit.measures = TRUE, standardized = TRUE)
-
-

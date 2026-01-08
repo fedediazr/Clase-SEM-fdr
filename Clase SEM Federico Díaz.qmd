@@ -3,6 +3,7 @@ title: "Modelos de ecuaciones estructurales"
 author: "Federico Díaz Recart"
 subtitle: "[https://github.com/fedediazr/Clase-SEM-fdr](https://github.com/fedediazr/Clase-SEM-fdr)"
 format: revealjs
+self-contained: true
 editor: visual
 ---
 
