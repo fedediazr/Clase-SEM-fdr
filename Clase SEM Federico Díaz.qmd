@@ -166,4 +166,14 @@ loadings <- inspect(fit_cfa, what = "std")$lambda
 loadings
 ```
 
-## 2: Modelo estructural
+## 2: Modelo estructural {.center}
+
+## Path analysis (Análisis de senderos)
+
+-   Es un modelo de relaciones de dependencia entre varias variables
+-   Utiliza variables observadas o promedios de ítemes
+-   No evalúa un modelo de medición
+
+[![Caughlin, D. E. (2022). R for HR: An introduction to human resource analytics using R.](PathModel.png)](https://rforhr.com/sem.html)
+
+
