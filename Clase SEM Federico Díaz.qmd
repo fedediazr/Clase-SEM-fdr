@@ -1,0 +1,169 @@
+---
+title: "Modelos de ecuaciones estructurales"
+author: "Federico Díaz Recart"
+subtitle: "[https://github.com/fedediazr/Clase-SEM_fdr](https://github.com/fedediazr/Clase-SEM_fdr)"
+format: revealjs
+editor: visual
+---
+
+## Contenidos
+
+<div style="font-size: 0.85em;">
+
+-   Introducción
+
+-   Modelo de medición
+
+    -   Error de medición
+    -   Variable latente
+    -   CFA (Análisis factorial confirmatorio)
+
+-   Modelo estructural
+
+    -   Regresión lineal
+    -   Path analysis (Variables observadas)
+
+-   Modelo de ecuaciones estructurales: Combinación entre modelo de medición y modelo estructural
+
+## Introducción: ¿Qué es SEM?
+
+Más que una técnica, los modelos de ecuaciones estructurales son una familia de métodos que combinan:
+
+1)  **Modelos de medición**: Permiten medir y evaluar como se relacionan un conjunto de variables observadas y si estas miden un constructo teórico de interés
+
+2)  **Modelos estructurales**: Permite evaluar si un conjunto de constructos se relacionan según un modelo teórico propuesto
+
+Es un conjunto de métodos comprensivos para la cuantificación y testeo de **teorías sustantivas**
+
+## Ejemplo: Normas sociales y polarización
+
+![González, R., Díaz, F., Fuenzalida, D., Álvarez, A., Lay, S., Carvacho, H., & Manzi, J. (2025, May 22--23). Social norms and affective polarization in political contexts \[Conference presentation\]. Interdisciplinary Conference on Social Norms, Cohesion, and (De)Polarization, Utrecht, Netherlands.](Ejemplo%20SEM.png)
+
+## 1: Modelo de medición {.center}
+
+## Error de medición
+
+Una de las características más importantes de los modelos SEM es que **toman en cuenta el error de medición**.
+
+Dos fuentes de error en encuestas: Medición (cómo se mide el fenómeno) y Representación (a quiénes se logra medir).
+
+-   Medición: El constructo teórico que se quiere medir se transforma en preguntas (operacionalización). Las respuestas pueden verse afectadas por problemas de validez, error de medición y error de procesamiento.
+
+## Error de medición
+
+-   Representación: Desde la población objetivo se define una población inferencial, un marco muestral y una muestra. En cada paso pueden surgir errores de cobertura, muestreo y no respuesta.
+
+Modelos SEM nos permiten separar la varianza asociada al puntaje "real" de un constructo de la varianza asociada a error de medición.
+
+## Error de medición
+
+![Total survey error approach](error.png)
+
+## Error de medición
+
+Por lo tanto, indicadores individuales pueden ser insuficientes para medir conceptos complejos, especialmente en ciencias sociales:
+
+-   Clase social
+-   Confianza social
+-   Actitudes hacia la democracia
+-   Actitudes punitivas
+-   Creencia en conspiraciones
+-   Bienestar subjetivo
+
+## Variable latente
+
+¿Cómo los modelos SEM corrigen el error de medición?
+
+-   SEM utiliza variables latentes (constructos no observados, p. ej., inteligencia).
+
+-   Estas se estiman a partir de múltiples variables observadas (ítems, puntajes).
+
+-   Separa la parte confiable (puntaje verdadero) del error de medición.
+
+-   Modela relaciones entre constructos libres de error. Entregando estimaciones menos sesgadas que usar variables observadas directamente.
+
+## Variable latente
+
+¿Qué es una variable latente?
+
+-   Constructos teóricos no observados y que no pueden ser medidos directamente pero que existen
+
+-   Son "inferidas" a través de múltiples variables que actúan como manifestaciones del constructo.
+
+-   Por ejemplo, no podemos medir directamente depresión, pero podemos aproximarnos a través de la medición de distintos síntomas (PHQ9).
+
+## Variable latente
+
+![](latent%20variable.jfif)
+
+## Análisis factorial confirmatorio
+
+-   Técnica multivariante de análisis de interdependencia entre variables
+-   Permite estudiar interrelación de un número de variables **observadas**
+-   Estas variables se agrupan en un número reducido de factores (variable latente)
+-   Validación de instrumentos
+-   Derivación de puntajes
+
+## Análisis factorial confirmatorio
+
+Ejemplo aplicado: ¿Corresponden las normas descriptivas pro contacto y las normas prescriptivas pro contacto a dos dimensiones distintas?
+
+![](CFA.png)
+
+## Variables
+
+<div style="font-size: 0.7em;">
+
+Indique el grado de acuerdo o desacuerdo con las siguientes afirmaciones
+
+-   Las personas de **\[INGROUP\]** que conozco valorarían que yo tenga amistades de **\[OUTGROUP\]**.
+-   Las personas de **\[INGROUP\]** que conozco me estimulan a que me junte con personas de **\[OUTGROUP\]**.
+-   Las personas de **\[INGROUP\]** que conozco valorarían que yo colabore con personas de **\[OUTGROUP\]**.
+-   Es común que las personas de **\[INGROUP\]** tengan amistades de **\[OUTGROUP\]**.
+-   Con frecuencia las personas de **\[INGROUP\]** se juntan con personas de **\[OUTGROUP\]**.
+-   Con frecuencia las personas de **\[INGROUP\]** colaboran con personas de **\[OUTGROUP\]**.
+
+## Pasos
+
+1)  Identificación del modelo
+2)  Evaluación de ajuste
+3)  Cargas factoriales
+
+## Vamos allá!
+
+<div style="font-size: 0.85em;">
+
+```{r, echo=TRUE}
+load("Base_polarizacion_escalas.Rdata")
+library(lavaan)
+cfa <- '
+
+# -----------------------------------------------
+# Variables latentes
+# -----------------------------------------------
+norm_descr_pro_cont =~ Q10_1 + Q10_2 + Q10_3 
+norm_pres_pro_cont =~ Q15_1 + Q15_2 + Q15_3
+
+# Covarianza
+norm_descr_pro_cont ~~ norm_pres_pro_cont
+'
+
+fit_cfa <- cfa(cfa, data = df)
+```
+
+-   el operador =\~ significa "es manifestado por"
+-   Tenemos 2 variables latentes, manifestadas por 3 items cada una
+-   Para ajustar el modelo utilizamos el comando cfa
+
+## Ajuste del modelo Y cargas factoriales
+
+```{r, echo=TRUE}
+fitMeasures(fit_cfa, c("chisq", "df", "pvalue", "cfi", "rmsea", "tli"))
+```
+
+```{r, echo=TRUE}
+loadings <- inspect(fit_cfa, what = "std")$lambda
+loadings
+```
+
+## 2: Modelo estructural
